@@ -2,8 +2,9 @@
 import sys
 import rospy
 from c1.srv import *
-
+import time
 def usage():
+    print("get args num : %d"%len(sys.argv))
     return "%s [x,y]"%sys.argv[0]
 
 def add_two_ints_request(x,y):
@@ -21,12 +22,13 @@ def main():
         y = int(sys.argv[2])
     else:
         print usage()
-        sys.exit(1)
     print("")
     print("%s + %s = %s"%(x, y, add_two_ints_request(x,y)))
 
 if __name__ == '__main__':
     try:
-        main()
+        while True:
+            main()
+            time.sleep(1)
     except rospy.ROSInterruptException:
         pass
