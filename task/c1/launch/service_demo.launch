@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="c1" type="srv_server.py" name="srv_server" launch-prefix="xterm -e" />
+</launch>

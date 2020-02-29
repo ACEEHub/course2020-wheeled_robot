@@ -19,9 +19,10 @@ def main():
     rospy.init_node('msg_publisher',anonymous=True)
     rate = rospy.Rate(10)
     count = 0
+    param_string = rospy.get_param("/test_param_server/key_of_str")
     while not rospy.is_shutdown():
         num_with_key = NumWithKey()
-        num_with_key.name = "NwK"
+        num_with_key.name = param_string
         num_with_key.num = count
         rospy.loginfo(num_with_key)
         pub.publish(num_with_key)
