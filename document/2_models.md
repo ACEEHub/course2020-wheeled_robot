@@ -8,14 +8,17 @@ apt-get install ros-kinetic-joint-state-publisher-gui ros-kinetic-joint-state-co
 
 本节推荐package以及细节文件结构请参考task/c2
 
-```
+```bash
 src
 ├── course_agv_control
 │   ├── CMakeLists.txt
 │   ├── config
 │   │   └── course_agv_control.yaml
 │   ├── launch
-│   │   ├── course_agv_control.launch
+│   │   └── course_agv_control.launch
+│   ├── scripts
+│   │   ├── keyboard_command.py  # 键盘控制
+│   │   └── kinematics.py        # 运动学分解
 │   └── package.xml
 ├── course_agv_description
 │   ├── CMakeLists.txt
