@@ -6,6 +6,9 @@
 >
 > 3.rosbag的使用
 
+```bash
+apt-get install ros-kinetic-map-server
+```
 本节推荐工程结构
 
 ```bash
