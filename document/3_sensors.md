@@ -6,6 +6,9 @@
 >
 > 3.rosbag的使用
 
+```bash
+apt-get install ros-kinetic-map-server
+```
 本节推荐工程结构
 
 ```bash
@@ -68,8 +71,7 @@ static_transform_publisher x y z qx qy qz qw frame_id child_frame_id  period_in_
 * 在launch文件中添加tf_publisher，tf tree参考:
 
 ```
-world_base
-├── map
+map
 └── robot_base
     ├── course_agv__hokuyo__link
     ├── course_agv__imu
@@ -78,7 +80,7 @@ world_base
     └── robot_chassis
 ```
 
-* 此时唯一没有解决的是`world_base->robot_base`
+* 此时唯一没有解决的是`map->robot_base`
   * 通过topic:/gazebo/link_states or /gazebo/model_states可以获取agv的全局位置以及姿态
   * 订阅并转换为我们需要的tf广播出去(robot_tf.py)
 
