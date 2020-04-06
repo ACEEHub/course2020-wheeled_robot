@@ -9,25 +9,6 @@
 > 路径规划并发布path
 
 本节推荐工程结构
-<!--
-src
-├──course_agv_gazebo
-├──course_agv_description
-├──course_agv_control
-└──course_agv_nav
-    ├── CMakeLists.txt
-    ├── launch
-    │   ├── nav.launch
-    │   └── nav.rviz
-    ├── package.xml
-    ├── scripts
-    │   ├── global_planner.py
-    │   ├── local_planner.py
-    │   ├── stupid_tracking.py
-    │   └── tracking.py
-    └── srv
-        └── Plan.srv
--->
 
 ```bash
 src
