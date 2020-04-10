@@ -28,3 +28,4 @@ function calc_cost(goal,obstacles):
 * 在获得一个path之后开始执行
 * 在到达goal时候结束执行
 
+![](images/c6_graph.png)
