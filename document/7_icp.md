@@ -2,7 +2,8 @@
 
 ![communication](images/c7_s.png)
 
-*　填写icp.py　完成相应功能
+*　填写icp.py完成相应功能
+*　使用最新的map.png替换原始地图文件
 *　推荐使用rosbag调试
   *　播放`rosbag play --clock --pause xxx.bag`
   *　录制 `rosbag record -a`
@@ -22,4 +23,4 @@
   * 生成array : ones,zeros,identity,arange
   * 矩阵计算 : +-*/,transpose,average,dot,linalg.svd
   * 分片:a[i:i+2,j:j+2]
-* 在书写每一条语句,想清楚维数是多少 !!! shape
+* 在书写每一条语句,想清楚维数是多少 !!! (numpy shape)
