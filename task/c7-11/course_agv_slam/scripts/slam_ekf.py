@@ -6,24 +6,35 @@ from nav_msgs.srv import GetMap
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 from visualization_msgs.msg import MarkerArray,Marker
+from nav_msgs.msg import OccupancyGrid
 import numpy as np
 from icp import ICP
 from ekf_lm import EKF,STATE_SIZE
 from extraction import LandMarkSet,Extraction
+from mapping import Mapping
 import sys
 
 MAX_LASER_RANGE = 30
 
 class SLAM_EKF():
     def __init__(self):
+        # ros param
+        self.robot_x = rospy.get_param('/slam/robot_x',0)
+        self.robot_y = rospy.get_param('/slam/robot_y',0)
+        self.robot_theta = rospy.get_param('/slam/robot_theta',0)
+        ## ros param of mapping
+        self.map_x_width = rospy.get_param('/slam/map_width')
+        self.map_y_width = rospy.get_param('/slam/map_height')
+        self.map_reso = rospy.get_param('/slam/map_resolution')
+        self.map_cellx_width = int(round(self.map_x_width/self.map_reso))
+        self.map_celly_width = int(round(self.map_y_width/self.map_reso))
+
         self.icp = ICP()
         self.ekf = EKF()
         self.extraction = Extraction()
+        self.mapping = Mapping(self.map_cellx_width,self.map_celly_width,self.map_reso)
 
         # odom robot init states
-        self.robot_x = rospy.get_param('/icp/robot_x',0)
-        self.robot_y = rospy.get_param('/icp/robot_y',0)
-        self.robot_theta = rospy.get_param('/icp/robot_theta',0)
         self.sensor_sta = [self.robot_x,self.robot_y,self.robot_theta]
         self.isFirstScan = True
         self.src_pc = []
@@ -45,14 +56,21 @@ class SLAM_EKF():
         self.odom_pub = rospy.Publisher('icp_odom',Odometry,queue_size=3)
         self.odom_broadcaster = tf.TransformBroadcaster()
         self.landMark_pub = rospy.Publisher('/landMarks',MarkerArray,queue_size=1)
+        self.map_pub = rospy.Publisher('/slam_map',OccupancyGrid,queue_size=1)
 
     def laserCallback(self,msg):
         np_msg = self.laserToNumpy(msg)
         lm = self.extraction.process(np_msg)
+        # u = self.calc_odometry(self.lm2pc(lm))
         u = self.calc_odometry(np_msg)
         z = self.observation(lm)
         self.xEst,self.PEst = self.ekf.estimate(self.xEst,self.PEst,z,u)
-        
+
+        # TODO
+        # obs = self.u2T(self.xEst[0:3]).dot(np_msg)
+        # pmap = self.mapping.update(obs[0], obs[1], self.xEst[0], self.xEst[1])
+
+        # self.publishMap(pmap)
         self.publishLandMark(lm)
         self.publishResult()
         pass
@@ -92,6 +110,17 @@ class SLAM_EKF():
         dw = math.atan2(t[1,0],t[0,0])
         u = np.array([[t[0,2],t[1,2],dw]])
         return u.T
+    
+    def u2T(self,u):
+        w = u[2]
+        dx = u[0]
+        dy = u[1]
+
+        return np.array([
+            [ math.cos(w),-math.sin(w), dx],
+            [ math.sin(w), math.cos(w), dy],
+            [0,0,1]
+        ])
 
     def lm2pc(self,lm):
         total_num = len(lm.id)
@@ -201,6 +230,28 @@ class SLAM_EKF():
             marker.color.b = 0.0
             landMark_array_msg.markers.append(marker)
         self.landMark_pub.publish(landMark_array_msg)
+
+    def publishMap(self,pmap):
+        map_msg = OccupancyGrid()
+        map_msg.header.seq = 1
+        map_msg.header.stamp = rospy.Time().now()
+        map_msg.header.frame_id = "map"
+
+        map_msg.info.map_load_time = rospy.Time().now()
+        map_msg.info.resolution = self.map_reso
+        map_msg.info.width = self.map_cellx_width
+        map_msg.info.height = self.map_celly_width
+        map_msg.info.origin.position.x = -self.map_cellx_width*self.map_reso/2.0
+        map_msg.info.origin.position.y = -self.map_celly_width*self.map_reso/2.0
+        map_msg.info.origin.position.z = 0
+        map_msg.info.origin.orientation.x = 0
+        map_msg.info.origin.orientation.y = 0
+        map_msg.info.origin.orientation.z = 0
+        map_msg.info.origin.orientation.w = 1.0
+
+        map_msg.data = list(pmap.T.reshape(-1)*100)
+        
+        self.map_pub.publish(map_msg)
 
 def main():
     rospy.init_node('slam_node')
