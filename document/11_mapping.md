@@ -4,9 +4,11 @@
 
 在上节课ekf_slam的基础上增加mapping作为slam_ekf.py的模块进行调用
 
-* 补充slam_ekf.py中的TODO（mapping过程）
+* rviz中再添加一个map消息 订阅`/slam_map`，设置透明度
 
-* 填写mapping.py中的update函数：
+* 补充`slam_ekf.py`中的TODO（mapping过程）
+
+* 填写`mapping.py`中的update函数：
   * 参数为ox,oy,center_x,center_y
   * 可以考虑使用bresenham方法完成激光对应的线段更新
 
