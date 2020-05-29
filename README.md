@@ -7,3 +7,8 @@
 * [x] 5.路径追踪
 * [x] 6.局部路径规划/调整
 * [x] [7.特征点icp](document/7_icp.md) 
+* [x] [8.ekf定位](document/8_ekf.md)
+* [ ] 9.ekf定位--landmark独立观测
+* [x] [10.ekf slam -- landmark](document/10_ekf_slam.md)
+* [x] [11.mapping](document/11_mapping.md)
+* [x] [12.replan](document/12_replan.md)
