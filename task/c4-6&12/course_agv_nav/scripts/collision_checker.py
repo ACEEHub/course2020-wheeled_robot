@@ -23,8 +23,8 @@ class Checker():
         self.laser_sub = rospy.Subscriber('/course_agv/laser/scan',LaserScan,self.laserCallback)
         self.collision_pub = rospy.Publisher('/collision_checker_result',Bool,queue_size=5)
         self.marker_pub = rospy.Publisher('/collision_marker',Marker,queue_size=1)
-	## global real pose TODO replace with slam pose
-	self.pose_sub = rospy.Subscriber('/gazebo/course_agv__robot_base',Pose,self.poseCallback)
+	    ## global real pose TODO replace with slam pose
+	    self.pose_sub = rospy.Subscriber('/gazebo/course_agv__robot_base',Pose,self.poseCallback)
 
     def poseCallback(self,msg):
         p = msg.position
@@ -39,15 +39,15 @@ class Checker():
     def laserCallback(self,msg):
         np_msg = self.laserToNumpy(msg)
         obs = self.u2T(self.robot_x).dot(np_msg)
-	## TODO update robot global pose
+	    ## TODO update robot global pose
         if self.collision_check(obs):
             self.publish_collision()
 
     def collision_check(self,obs):
         if self.path.shape[1] == 0:
             return False
-	res = False
-	## TODO
+	    res = False
+	    ## TODO
         return res
 
     def publish_collision(self):
