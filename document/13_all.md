@@ -1,5 +1,12 @@
 # one for all
 
+* navigation
+  * global planner
+  * local planner
+  * replan
+* mapping
+* localization
+
 ![final](images/final.png)
 
 * gazebo 慢速 physics - real time / step time
