@@ -1,5 +1,6 @@
 # 2019-2020春夏 轮式机器人技术及强化实践
-
+_only for preview_
+==19ACEE== 有意向自取
 * [x] [1.熟悉ROS](document/1_tutorials.md)
 * [x] [2.在仿真中对机器人建模](document/2_models.md)
 * [x] [3.使用并掌握tf,sensors以及rviz](document/3_sensors.md)
